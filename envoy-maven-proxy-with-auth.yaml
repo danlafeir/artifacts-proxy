@@ -16,6 +16,22 @@ static_resources:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
           http_filters:
+          - name: envoy.filters.http.jwt_authn
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
+              providers:
+                provider1:
+                  issuer: http://127.0.0.1:8080/realms/dan
+                  remote_jwks:
+                    http_uri:
+                      uri: http://127.0.0.1:8080/realms/dan/protocol/openid-connect/certs
+                      cluster: artifacts_proxy
+                      timeout: 1s
+              rules:
+              - match:
+                  prefix: /
+                requires:
+                  provider_name: provider1
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
