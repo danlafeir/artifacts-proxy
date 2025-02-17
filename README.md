@@ -9,6 +9,8 @@ This repo is meant to be an example of what I want from Platform Engineering gro
 ```bash
 brew install envoy
 brew install --cask rancher
+brew install jq
+brew install node
 ```
 
 ## "Unauthenticated" proxy to the default NPM registry
