@@ -21,12 +21,11 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
               providers:
                 provider1:
-                  issuer: http://127.0.0.1:8080/realms/dan
                   remote_jwks:
                     http_uri:
-                      uri: http://127.0.0.1:8080/realms/dan/protocol/openid-connect/certs
-                      cluster: artifacts_proxy
-                      timeout: 1s
+                      uri: http://127.0.0.1:8080/realms/test/protocol/openid-connect/certs
+                      cluster: jwk_provider
+                      timeout: 5s
               rules:
               - match:
                   prefix: /
@@ -64,3 +63,16 @@ static_resources:
       typed_config:
         "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
         sni: repo.maven.apache.org
+  - name: jwk_provider
+    type: STRICT_DNS
+    connect_timeout: 5s
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: jwk_provider
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: 127.0.0.1
+                port_value: 8080

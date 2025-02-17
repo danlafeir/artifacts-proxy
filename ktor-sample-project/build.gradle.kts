@@ -16,11 +16,14 @@ application {
 
 repositories {
     maven {
-        url = uri("http://0.0.0.0:1337/maven2/")
+        url = uri("http://0.0.0.0:1337/maven2")
         isAllowInsecureProtocol = true
         credentials(HttpHeaderCredentials::class) {
             name = "Authorization"
-            value = "Bearer ${System.getenv("KEYCLOAK_JWT")}"
+            value = "Bearer ${System.getenv("JWT")}"
+        }
+        authentication {
+            create<HttpHeaderAuthentication>("header")
         }
     }
 }
